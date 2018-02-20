@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Include="Huffman.fs" />
+    <Compile Include="FrequencyTable.fs" />
   </ItemGroup>
 
   <ItemGroup>

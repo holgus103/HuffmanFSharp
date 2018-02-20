@@ -17,11 +17,35 @@ type TestClass () =
         Assert.IsTrue(true);
 
     [<TestMethod>]
-    member this.CountsBasicTest () = 
+    member this.CountsBasicOneTest () = 
 
-        Huffman.getCounts ['a'] Map.empty
+        FrequencyTable.getCounts ['a'] Map.empty
         |> Map.tryFind 'a'
         |> validator 1
+
+    [<TestMethod>]
+    member this.CountsBasicFiveTest () = 
+
+        FrequencyTable.getCounts ['a'; 'a'; 'a'; 'a'; 'a'] Map.empty
+        |> Map.tryFind 'a'
+        |> validator 5
+
+    [<TestMethod>]
+    member this.CountsVariousTest () = 
+
+        let res = FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
+        
+        let folder state v =
+            let (k, c) = v
+            res
+            |> Map.tryFind k
+            |> validator c
+
+        [('a', 2); ('b', 1); ('c', 2)]
+        |> List.fold folder ()
+
+
+
 
 
 
