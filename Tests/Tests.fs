@@ -5,7 +5,7 @@ open Huffman
 
 
 [<TestClass>]
-type TestClass () =
+type BasicTests () =
 
     let validator c v = 
         match v with 
