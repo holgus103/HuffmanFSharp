@@ -4,5 +4,5 @@ dotnet: 2.0.0
 script:
  - dotnet restore ./Tests
  - dotnet build ./Tests
- - dotnet test ./tests
+ - dotnet test ./Tests
 
