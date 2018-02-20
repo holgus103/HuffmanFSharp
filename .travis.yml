@@ -1,6 +1,6 @@
 language: fsharp
 mono: none
-dotnet: 2.1.45
+dotnet: 2.0.0
 script:
  - dotnet restore ./Tests
  - dotnet build ./Tests
