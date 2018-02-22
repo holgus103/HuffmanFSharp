@@ -25,3 +25,5 @@ type TreeTests () =
         |> (fun (key, value) -> 
             Assert.AreEqual(5, value.value)
         )
+
+    
