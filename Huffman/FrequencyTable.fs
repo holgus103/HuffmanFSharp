@@ -2,6 +2,7 @@ namespace Huffman
 
 module FrequencyTable = 
 
+    type Coding = {meaningfulBits : int; value : int}
 
     type TreeNode = {left : TreeNode option; right : TreeNode option; value : int; key : char } 
 
@@ -27,7 +28,7 @@ module FrequencyTable =
                 else (key, state)
             )
             ('0', {value = -1 ; key = '0'; left = None; right = None})
-
+            
     let buildTree counts = 
 
         let rec addNodes nodes =
@@ -63,3 +64,32 @@ module FrequencyTable =
 
         nodes 
         |> addNodes
+
+    let generateTable root =
+
+        let rec processNode (node : TreeNode) (prefix : Coding) = 
+
+            let right x = 
+
+                let newValue = 
+                    prefix.meaningfulBits
+                    |> (<<<) 1 
+                    |> (|||) prefix.value
+
+                {meaningfulBits = prefix.meaningfulBits + 1; value = newValue }
+                |> processNode x 
+
+            let left x = 
+                {meaningfulBits = prefix.meaningfulBits + 1; value = prefix.value}
+                |> processNode x 
+
+            match (node.left, node.right) with
+            | (None, None) -> [(node.key, prefix)] 
+            | (None, Some x) -> right x                
+            | (Some x, None) -> left x               
+            | (Some x, Some y) ->
+                (left x, right x)
+                ||> List.append
+
+        processNode root {meaningfulBits = 0; value = 0}
+
