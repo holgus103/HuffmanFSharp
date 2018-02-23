@@ -1,5 +1,6 @@
 namespace Huffman
 
+
 module FrequencyTable = 
 
     type Coding = {meaningfulBits : int; value : int}
@@ -68,7 +69,6 @@ module FrequencyTable =
     let generateTable root =
 
         let rec processNode (node : TreeNode) (prefix : Coding) = 
-
             let right x = 
 
                 let newValue = 
@@ -88,7 +88,7 @@ module FrequencyTable =
             | (None, Some x) -> right x                
             | (Some x, None) -> left x               
             | (Some x, Some y) ->
-                (left x, right x)
+                (left x, right y)
                 ||> List.append
 
         processNode root {meaningfulBits = 0; value = 0}

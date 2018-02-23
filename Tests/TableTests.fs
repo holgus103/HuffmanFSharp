@@ -17,25 +17,17 @@ type TableTests () =
     [<TestMethod>]
     member this.TableContentsTest () =      
             
-        let v = FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
-        Trace.WriteLine(v);
-        let t = 
-            v
-            |> FrequencyTable.buildTree
-            |> Map.toList
-            |> List.head
-            |> snd
-
-        Trace.WriteLine(t)
-        let tab = 
-            t
-            |> FrequencyTable.generateTable 
-        Trace.WriteLine(tab)
-        tab
+        
+        FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
+        |> FrequencyTable.buildTree
+        |> Map.toList
+        |> List.head
+        |> snd
+        |> FrequencyTable.generateTable 
         |> Map.ofList 
         |> assertValue 'b' 1
-        |> assertValue 'a' 0
-        |> assertValue 'c' 1
+        |> assertValue 'a' 3
+        |> assertValue 'c' 0
         |> ignore
 
 
