@@ -10,7 +10,7 @@ type TreeTests () =
     [<TestMethod>]
     member this.TreeCountTest () =
         
-        FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
+        FrequencyTable.getCounts Map.empty ['a'; 'b'; 'c'; 'c'; 'a'] 
         |> FrequencyTable.buildTree
         |> Map.count
         |> (fun x -> Assert.AreEqual(1, x))
@@ -18,7 +18,7 @@ type TreeTests () =
     [<TestMethod>]
     member this.TreeContentsTest () =      
             
-        FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
+        FrequencyTable.getCounts Map.empty ['a'; 'b'; 'c'; 'c'; 'a'] 
         |> FrequencyTable.buildTree
         |> Map.toList
         |> List.head

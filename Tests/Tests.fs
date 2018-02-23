@@ -19,21 +19,21 @@ type BasicTests () =
     [<TestMethod>]
     member this.CountsBasicOneTest () = 
 
-        FrequencyTable.getCounts ['a'] Map.empty
+        FrequencyTable.getCounts Map.empty ['a'] 
         |> Map.tryFind 'a'
         |> validator 1
 
     [<TestMethod>]
     member this.CountsBasicFiveTest () = 
 
-        FrequencyTable.getCounts ['a'; 'a'; 'a'; 'a'; 'a'] Map.empty
+        FrequencyTable.getCounts Map.empty ['a'; 'a'; 'a'; 'a'; 'a'] 
         |> Map.tryFind 'a'
         |> validator 5
 
     [<TestMethod>]
     member this.CountsVariousTest () = 
 
-        let res = FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
+        let res = FrequencyTable.getCounts Map.empty ['a'; 'b'; 'c'; 'c'; 'a'] 
         
         let folder state v =
             let (k, c) = v

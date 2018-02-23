@@ -18,13 +18,12 @@ type TableTests () =
     member this.TableContentsTest () =      
             
         
-        FrequencyTable.getCounts ['a'; 'b'; 'c'; 'c'; 'a'] Map.empty
+        FrequencyTable.getCounts Map.empty ['a'; 'b'; 'c'; 'c'; 'a'] 
         |> FrequencyTable.buildTree
         |> Map.toList
         |> List.head
         |> snd
         |> FrequencyTable.generateTable 
-        |> Map.ofList 
         |> assertValue 'b' 1
         |> assertValue 'a' 3
         |> assertValue 'c' 0

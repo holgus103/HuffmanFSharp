@@ -14,12 +14,12 @@ module FrequencyTable =
                 Map.remove key dict
                 |> Map.add key (x + 1)
 
-    let rec getCounts text res = 
+    let rec getCounts res text = 
         match text with 
         | [] -> res
         | head :: tail -> 
-            incrementCounter res head
-            |> getCounts tail
+            (incrementCounter res head |> getCounts) tail
+            
             
     let findMin counts = 
         counts
@@ -92,4 +92,5 @@ module FrequencyTable =
                 ||> List.append
 
         processNode root {meaningfulBits = 0; value = 0}
+        |> Map.ofList
 
