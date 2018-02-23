@@ -1,5 +1,5 @@
 namespace Huffman 
-
+open System
 
 module Main = 
 
@@ -7,10 +7,12 @@ module Main =
 
     let encode (txt : string) =     
 
-
-        let dict =
+        let input = 
             txt.ToCharArray()
             |> List.ofArray
+
+        let dict =
+            input
             |> FrequencyTable.getCounts Map.empty
             |> FrequencyTable.buildTree
             |> Map.toList
@@ -30,20 +32,19 @@ module Main =
                 {output = state.output; currentBuffer = state.currentBuffer; bufferCount = state.bufferCount}
             else   
                 // write whole code to the buffer
-                {currentBuffer = 
-                    state.bufferCount
-                    |> (<<<) currentCode.value  
-                    |> (|||) currentBuffer;
-                bufferCount += currentCode.meaningfulBits;
-                output = if state.bufferCount < 32 then state.currentBuffer else state.currentBuffer}
-               
-
-
-
-        txt
-        |> List.fold processChar       
         
-        ()
+            {currentBuffer = state.bufferCount
+                |> (<<<) currentCode.value  
+                |> (|||) state.currentBuffer;
+            bufferCount = state.bufferCount + currentCode.meaningfulBits;
+            output = if state.bufferCount < 32 then state.output else state.output
+            }
+           
+
+
+        input
+        |> List.fold processChar {output = List.empty; currentBuffer = 0; bufferCount = 0}
+       
 
     let decode = 
         ()
