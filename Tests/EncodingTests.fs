@@ -28,8 +28,3 @@ type EncodingTests () =
                          
         Assert.AreEqual(0b01001110011100111001110001111100, List.head value.output)
         Assert.AreEqual(value.currentBuffer, 0b1110)
-
-
-
-
-// 1110 01001110011100111001110001111100
