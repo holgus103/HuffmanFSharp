@@ -27,18 +27,35 @@ module Main =
                 | None -> raise (Exception("Missing dictionary entry"))
                 | Some x -> x
             
-            if currentCode.meaningfulBits > (32 - state.bufferCount) then
-                // needs to write only a part of the code 
-                {output = state.output; currentBuffer = state.currentBuffer; bufferCount = state.bufferCount}
+            if currentCode.meaningfulBits >= (32 - state.bufferCount) then
+            // needs to push buffer to the list 
+                {
+                output = 
+                    state.bufferCount
+                    |> (-) 32 
+                    |> (<<<) 1
+                    |> (+) -1
+                    |> (&&&) currentCode.value 
+                    |> (|||) state.currentBuffer
+                    |> (fun x -> x::state.output)
+                bufferCount = 
+                    state.bufferCount
+                    |> (-) 32
+                    |> (-) currentCode.meaningfulBits
+                currentBuffer = 
+                    state.bufferCount
+                    |> (-) 32
+                    |> (>>>) currentCode.value            
+                }
             else   
-                // write whole code to the buffer
-        
-            {currentBuffer = state.bufferCount
-                |> (<<<) currentCode.value  
-                |> (|||) state.currentBuffer;
-            bufferCount = state.bufferCount + currentCode.meaningfulBits;
-            output = if state.bufferCount < 32 then state.output else state.output
-            }
+            // no need to push the buffer to the list
+                {
+                    currentBuffer = state.bufferCount
+                        |> (<<<) currentCode.value  
+                        |> (|||) state.currentBuffer;
+                    bufferCount = state.bufferCount + currentCode.meaningfulBits;
+                    output = state.output
+                }
            
 
 
