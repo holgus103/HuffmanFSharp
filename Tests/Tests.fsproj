@@ -10,6 +10,7 @@
     <Compile Include="Tests.fs" />
     <Compile Include="TreeTests.fs" />
     <Compile Include="TableTests.fs" />
+    <Compile Include="EncodingTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

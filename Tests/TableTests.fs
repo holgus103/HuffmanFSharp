@@ -24,7 +24,7 @@ type TableTests () =
         |> List.head
         |> snd
         |> FrequencyTable.generateTable 
-        |> assertValue 'b' 1
+        |> assertValue 'b' 2
         |> assertValue 'a' 3
         |> assertValue 'c' 0
         |> ignore

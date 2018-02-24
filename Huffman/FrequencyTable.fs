@@ -1,5 +1,6 @@
 namespace Huffman
 
+open System.Diagnostics
 
 module FrequencyTable = 
 
@@ -39,12 +40,15 @@ module FrequencyTable =
                 let (min1key, min1val) =
                     nodes
                     |> findMin
+
+                // Trace.WriteLine(min1val)
                 
                 let (min2key, min2val) = 
                     nodes
                     |> Map.remove min1key
                     |> findMin
 
+                // Trace.WriteLine(min2val)
                 nodes
                 |> Map.remove min1key
                 |> Map.remove min2key
@@ -68,21 +72,23 @@ module FrequencyTable =
 
     let generateTable root =
 
+        // Trace.WriteLine("Table generation")
         let rec processNode (node : TreeNode) (prefix : Coding) = 
             let right x = 
 
                 let newValue = 
-                    prefix.meaningfulBits
-                    |> (<<<) 1 
-                    |> (|||) prefix.value
+                    prefix.value
+                    |> (<<<) 1
+                    |> (|||) 1
 
-                {meaningfulBits = prefix.meaningfulBits + 1; value = newValue }
+                {meaningfulBits = prefix.meaningfulBits + 1; value = newValue  }
                 |> processNode x 
 
             let left x = 
-                {meaningfulBits = prefix.meaningfulBits + 1; value = prefix.value}
+                {meaningfulBits = prefix.meaningfulBits + 1; value = prefix.value <<< 1}
                 |> processNode x 
 
+            // Trace.WriteLine(node)
             match (node.left, node.right) with
             | (None, None) -> [(node.key, prefix)] 
             | (None, Some x) -> right x                
