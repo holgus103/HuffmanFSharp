@@ -97,6 +97,10 @@ module FrequencyTable =
                 (left x, right y)
                 ||> List.append
 
-        processNode root {meaningfulBits = 0; value = 0}
-        |> Map.ofList
+        let table = 
+            processNode root {meaningfulBits = 0; value = 0}
+            |> Map.ofList
+
+        Trace.WriteLine(table)
+        table
 
