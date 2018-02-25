@@ -1,9 +1,31 @@
 namespace Huffman 
 open System
+open FrequencyTable
 
 module Main = 
 
-    type EncodingState = {output : int list; currentBuffer : int; bufferCount : int}
+    type EncodingState = 
+        {
+            output : int list;
+            currentBuffer : int;
+            bufferCount : int
+        }
+
+    type EncodedResult = 
+        {
+            output : int list;
+            appendedZeros : int;
+            dictionary : Map<char, Coding>
+        }
+
+    type DecodingState = 
+        {
+            input : int list;
+            output : char list;
+            buffer : int;
+            bufferCount : int;
+            foundCode : Coding
+        }    
 
     let encode (txt : string) =     
 
@@ -54,16 +76,90 @@ module Main =
                         |> (<<<) currentCode.value  
                         |> (|||) state.currentBuffer;
                     bufferCount = state.bufferCount + currentCode.meaningfulBits;
-                    output = state.output
+                    output = state.output 
                 }
            
 
 
         input
         |> List.fold processChar {output = List.empty; currentBuffer = 0; bufferCount = 0}
+        |> (fun x -> 
+                if x.bufferCount > 0 then
+                    {
+                    output = x.currentBuffer :: x.output;
+                    appendedZeros = 32 - x.bufferCount;
+                    dictionary = dict
+                    }
+                else 
+                    {
+                       output = x.output;
+                       appendedZeros = 0;
+                       dictionary = dict
+                    }
+            )
        
 
-    let decode = 
+    let decode (input : EncodedResult) = 
+
+        let dict = 
+            input.dictionary
+            |> FrequencyTable.invertDictionary
+            |> (fun x-> x.dict)
+        
+        
+        let rec processCodes (state : DecodingState) =
+
+            let code =
+                match Map.tryFind state.foundCode dict with
+                // no code exists, extend current code
+                | None -> 
+                    {
+                        meaningfulBits = state.foundCode.meaningfulBits + 1;
+                        value =
+                            (
+                                1
+                                |> (-) state.bufferCount
+                                |> (<<<) 1
+                                |> (&&&) state.buffer,
+                                1
+                                |> (+) state.foundCode.meaningfulBits
+                                |> (-) state.bufferCount
+                            )                            
+                            ||> (>>>)
+                            |> (|||) state.buffer 
+                    }
+                // code found, reset current code
+                | Some x -> 
+                    {
+                        meaningfulBits = 1;
+                        value = 
+                            1
+                            |> (-) state.bufferCount
+                            |> (<<<) 1
+                            |> (&&&) state.buffer
+                            |> (>>>) (state.bufferCount - 1)
+                    }
+            if state.bufferCount = 0 then
+                // refill buffer
+                // TODO: everything
+                match state.input with
+                | [] -> state.output 
+                | b::tail -> 
+                    {
+                        input = tail;
+                        output = state.output;  
+                        buffer = b;
+                        bufferCount = 32;
+                        foundCode = {value = 0; meaningfulBits = 0}
+
+                        
+                    }
+                    |> processCodes
+            else
+                List.empty
+
+
+
         ()
 
             

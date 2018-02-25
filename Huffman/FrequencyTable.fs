@@ -8,6 +8,8 @@ module FrequencyTable =
 
     type TreeNode = {left : TreeNode option; right : TreeNode option; value : int; key : char } 
 
+    type InvertionState =  {dict : Map<Coding, char>}
+
     let incrementCounter (dict : Map<char, int>) (key : char) =
         match Map.tryFind key dict with
             | None -> Map.add key 1 dict
@@ -104,3 +106,13 @@ module FrequencyTable =
         Trace.WriteLine(table)
         table
 
+    let invertDictionary (dict : Map<char, Coding>) =
+
+        let folder (state : InvertionState) (k : char) (v : Coding) = 
+            {
+                dict = state.dict
+                    |> Map.add v k
+            }
+            
+        dict
+        |> Map.fold folder {dict = Map.empty}
